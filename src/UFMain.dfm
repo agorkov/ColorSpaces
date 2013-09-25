@@ -4743,6 +4743,10 @@ object Form1: TForm1
     object TSCMYK: TTabSheet
       Caption = 'CMYK'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgKey: TImage
         Left = 3
         Top = 3
@@ -4775,6 +4779,10 @@ object Form1: TForm1
     object TSHSI: TTabSheet
       Caption = 'HSI'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgHue: TImage
         Left = 3
         Top = 3
@@ -4800,6 +4808,10 @@ object Form1: TForm1
     object TSYIQ: TTabSheet
       Caption = 'YIQ'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgI: TImage
         Left = 379
         Top = 3

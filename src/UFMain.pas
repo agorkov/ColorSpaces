@@ -107,7 +107,6 @@ var
   i, j: word;
   r, g, b: double;
   Y, Ii, Q: double;
-  mask: byte;
 begin
   for j := 0 to Form1.ImgOrigin.Height do
     for i := 0 to Form1.ImgOrigin.Width do

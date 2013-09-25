@@ -3,7 +3,7 @@ program PColorSpaces;
 uses
   Vcl.Forms,
   UFMain in 'UFMain.pas' {Form1},
-  UPixelConvert in 'UPixelConvert.pas';
+  UPixelConvert in '..\..\ImgSharedUnits\src\UPixelConvert.pas';
 
 {$R *.res}
 
