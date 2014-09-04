@@ -4689,7 +4689,6 @@ object Form1: TForm1
       B984EDBB86EDBB86EBB883EEB984EDB984EDB984EEBA85EEBA86F1BC88EAB582
       EEB986EFBA87EDBA85ECB984ECB883EEB984EDBA84EEB9850000}
     Stretch = True
-    OnClick = ImgOriginClick
     OnMouseMove = ImgRestoreMouseMove
   end
   object ImgRestore: TImage
@@ -4698,7 +4697,6 @@ object Form1: TForm1
     Width = 242
     Height = 205
     Stretch = True
-    OnDblClick = ImgRestoreDblClick
     OnMouseMove = ImgRestoreMouseMove
   end
   object ImgDiff: TImage
@@ -4743,10 +4741,6 @@ object Form1: TForm1
     object TSCMYK: TTabSheet
       Caption = 'CMYK'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object ImgKey: TImage
         Left = 3
         Top = 3
@@ -4779,10 +4773,6 @@ object Form1: TForm1
     object TSHSI: TTabSheet
       Caption = 'HSI'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object ImgHue: TImage
         Left = 3
         Top = 3
@@ -4808,10 +4798,6 @@ object Form1: TForm1
     object TSYIQ: TTabSheet
       Caption = 'YIQ'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object ImgI: TImage
         Left = 379
         Top = 3
@@ -4917,7 +4903,7 @@ object Form1: TForm1
   end
   object BHSI: TButton
     Left = 263
-    Top = 70
+    Top = 66
     Width = 90
     Height = 21
     Caption = 'HSI'
@@ -4951,14 +4937,5 @@ object Form1: TForm1
     Max = 8
     Position = 8
     TabOrder = 7
-  end
-  object OpenPictureDialog1: TOpenPictureDialog
-    Filter = 'Bitmaps (*.bmp)|*.bmp'
-    Left = 296
-    Top = 128
-  end
-  object SavePictureDialog1: TSavePictureDialog
-    Left = 296
-    Top = 176
   end
 end

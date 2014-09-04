@@ -1,5 +1,5 @@
 unit UFMain;
-
+
 interface
 
 uses
@@ -44,8 +44,6 @@ type
     Image4: TImage;
     Edit1: TEdit;
     UpDown1: TUpDown;
-    OpenPictureDialog1: TOpenPictureDialog;
-    SavePictureDialog1: TSavePictureDialog;
     procedure ImgRestoreMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure FormActivate(Sender: TObject);
     procedure BRGBClick(Sender: TObject);
@@ -53,8 +51,6 @@ type
     procedure BHSIClick(Sender: TObject);
     procedure BYIQClick(Sender: TObject);
     procedure FormCanResize(Sender: TObject; var NewWidth, NewHeight: Integer; var Resize: Boolean);
-    procedure ImgOriginClick(Sender: TObject);
-    procedure ImgRestoreDblClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -72,232 +68,258 @@ uses
   Math, UPixelConvert;
 
 const
-  RowStep = 20;
+  RowStep = 10;
 
 procedure ColorToRGBClick;
 var
   i, j: word;
-  r, g, b: double;
+  o: TColorPixel;
 begin
-  with Form1 do
-  begin
-    for j := 0 to ImgOrigin.Height do
-      for i := 0 to ImgOrigin.Width do
-      begin
-        UPixelConvert.TColorToRGB(ImgOrigin.Canvas.Pixels[i, j], r, g, b);
-        ImgRed.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(r, r, r);
-        ImgGreen.Canvas.Pixels[i, j] := RGBToColor(g, g, g);
-        ImgBlue.Canvas.Pixels[i, j] := RGBToColor(b, b, b);
-
-        if j mod RowStep = 0 then
-        begin
-          ImgRed.Refresh;
-          ImgGreen.Refresh;
-          ImgBlue.Refresh;
-        end;
-      end;
-    ImgRed.Picture.SaveToFile('red.bmp');
-    ImgGreen.Picture.SaveToFile('green.bmp');
-    ImgBlue.Picture.SaveToFile('blue.bmp');
-  end;
-end;
-
-procedure ColorToYIQClick;
-var
-  i, j: word;
-  r, g, b: double;
-  Y, Ii, Q: double;
-begin
+  o := TColorPixel.Create;
   for j := 0 to Form1.ImgOrigin.Height do
     for i := 0 to Form1.ImgOrigin.Width do
     begin
-      UPixelConvert.TColorToRGB(Form1.ImgOrigin.Canvas.Pixels[i, j], r, g, b);
-      UPixelConvert.RGBToYIQ(r, g, b, Y, Ii, Q);
-      Ii := (Ii + 0.595) / 1.191;
-      Q := (Q + 0.523) / 1.045;
-      Ii := UPixelConvert.NormalizationByte(Ii, Form1.UpDown1.Position) / 255;
-      Q := UPixelConvert.NormalizationByte(Q, Form1.UpDown1.Position) / 255;
-      Form1.ImgY.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(Y, Y, Y);
-      Form1.ImgI.Canvas.Pixels[i, j] := RGBToColor(Ii, Ii, Ii);
-      Form1.ImgQ.Canvas.Pixels[i, j] := RGBToColor(Q, Q, Q);
-
-      if j mod RowStep = 0 then
-      begin
-        Form1.ImgY.Refresh;
-        Form1.ImgI.Refresh;
-        Form1.ImgQ.Refresh;
-      end;
+      o.SetFullColor(Form1.ImgOrigin.Canvas.Pixels[i, j]);
+      Form1.ImgRed.Canvas.Pixels[i, j] := RGB(round(o.GetRed * 255), round(o.GetRed * 255), round(o.GetRed * 255));
+      Form1.ImgGreen.Canvas.Pixels[i, j] := RGB(round(o.GetGreen * 255), round(o.GetGreen * 255), round(o.GetGreen * 255));
+      Form1.ImgBlue.Canvas.Pixels[i, j] := RGB(round(o.GetBlue * 255), round(o.GetBlue * 255), round(o.GetBlue * 255));
     end;
-  Form1.ImgY.Picture.SaveToFile('Y.bmp');
-  Form1.ImgI.Picture.SaveToFile('I.bmp');
-  Form1.ImgQ.Picture.SaveToFile('Q.bmp');
-end;
-
-procedure HSIToColorClick;
-var
-  i, j: word;
-  r, g, b: double;
-  H, S, V: double;
-begin
-  with Form1 do
-  begin
-    ImgRestore.Canvas.Pen.Color := clWhite;
-    ImgRestore.Canvas.Rectangle(0, 0, ImgRestore.Width, ImgRestore.Height);
-    for j := 0 to ImgOrigin.Height do
-      for i := 0 to ImgOrigin.Width do
-      begin
-        UPixelConvert.TColorToRGB(ImgHue.Canvas.Pixels[i, j], H, H, H);
-        H := H * 360;
-        TColorToRGB(ImgSaturation.Canvas.Pixels[i, j], S, S, S);
-        TColorToRGB(ImgIntensity.Canvas.Pixels[i, j], V, V, V);
-        UPixelConvert.HSIToRGB(r, g, b, H, S, V);
-        ImgRestore.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(r, g, b);
-
-        if j mod RowStep = 0 then
-          ImgRestore.Refresh;
-      end;
-  end;
-end;
-
-procedure CompareImages;
-var
-  i, j: word;
-begin
-  Form1.ImgDiff.Canvas.Pen.Color := clWhite;
-  Form1.ImgDiff.Canvas.Rectangle(0, 0, Form1.ImgDiff.Width, Form1.ImgDiff.Height);
-  Form1.ImgDiff.Refresh;
-  for j := 0 to Form1.ImgOrigin.Height do
-    for i := 0 to Form1.ImgOrigin.Width do
-    begin
-      if Form1.ImgOrigin.Canvas.Pixels[i, j] = Form1.ImgRestore.Canvas.Pixels[i, j] then
-        Form1.ImgDiff.Canvas.Pixels[i, j] := clWhite
-      else
-        Form1.ImgDiff.Canvas.Pixels[i, j] := clRed;
-      if j mod RowStep = 0 then
-        Form1.ImgDiff.Refresh;
-    end;
+  o.Free;
+  Form1.Refresh;
 end;
 
 procedure RGBToColorClick;
 var
   i, j: word;
-  r, g, b: double;
+  o, r: TColorPixel;
 begin
-  with Form1 do
-  begin
-    ImgRestore.Canvas.Pen.Color := clWhite;
-    ImgRestore.Canvas.Rectangle(0, 0, ImgRestore.Width, ImgRestore.Height);
-    for j := 0 to ImgOrigin.Height do
-      for i := 0 to ImgOrigin.Width do
-      begin
-        UPixelConvert.TColorToRGB(ImgRed.Canvas.Pixels[i, j], r, r, r);
-        TColorToRGB(ImgGreen.Canvas.Pixels[i, j], g, g, g);
-        TColorToRGB(ImgBlue.Canvas.Pixels[i, j], b, b, b);
-        ImgRestore.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(r, g, b);
-        if j mod RowStep = 0 then
-          ImgRestore.Refresh;
-      end;
-  end;
+  o := TColorPixel.Create;
+  r := TColorPixel.Create;
+  for j := 0 to Form1.ImgOrigin.Height do
+    for i := 0 to Form1.ImgOrigin.Width do
+    begin
+      o.SetFullColor(Form1.ImgRed.Canvas.Pixels[i, j]);
+      r.SetRed(o.GetRed);
+      o.SetFullColor(Form1.ImgGreen.Canvas.Pixels[i, j]);
+      r.SetGreen(o.GetRed);
+      o.SetFullColor(Form1.ImgBlue.Canvas.Pixels[i, j]);
+      r.SetBlue(o.GetRed);
+
+      Form1.ImgRestore.Canvas.Pixels[i, j] := r.GetFullColor;
+    end;
+  o.Free;
+  r.Free;
+  Form1.Refresh;
+end;
+
+procedure ColorToCMYKClick;
+var
+  i, j: word;
+  o: TColorPixel;
+begin
+  o := TColorPixel.Create;
+  for j := 0 to Form1.ImgOrigin.Height do
+    for i := 0 to Form1.ImgOrigin.Width do
+    begin
+      o.SetFullColor(Form1.ImgOrigin.Canvas.Pixels[i, j]);
+      Form1.ImgCyan.Canvas.Pixels[i, j] := RGB(round(o.GetCyan * 255), round(o.GetCyan * 255), round(o.GetCyan * 255));
+      Form1.ImgMagenta.Canvas.Pixels[i, j] := RGB(round(o.GetMagenta * 255), round(o.GetMagenta * 255), round(o.GetMagenta * 255));
+      Form1.ImgYellow.Canvas.Pixels[i, j] := RGB(round(o.GetYellow * 255), round(o.GetYellow * 255), round(o.GetYellow * 255));
+      Form1.ImgKey.Canvas.Pixels[i, j] := RGB(round(o.GetKeyColor * 255), round(o.GetKeyColor * 255), round(o.GetKeyColor * 255));
+    end;
+  o.Free;
+  Form1.Refresh;
+end;
+
+procedure CMYKToColorClick;
+var
+  i, j: word;
+  o, r: TColorPixel;
+begin
+  o := TColorPixel.Create;
+  r := TColorPixel.Create;
+  for j := 0 to Form1.ImgOrigin.Height do
+    for i := 0 to Form1.ImgOrigin.Width do
+    begin
+      o.SetFullColor(Form1.ImgCyan.Canvas.Pixels[i, j]);
+      r.SetCyan(o.GetRed);
+      o.SetFullColor(Form1.ImgMagenta.Canvas.Pixels[i, j]);
+      r.SetMagenta(o.GetRed);
+      o.SetFullColor(Form1.ImgYellow.Canvas.Pixels[i, j]);
+      r.SetYellow(o.GetRed);
+      o.SetFullColor(Form1.ImgKey.Canvas.Pixels[i, j]);
+      r.SetKeyColor(o.GetRed);
+
+      Form1.ImgRestore.Canvas.Pixels[i, j] := r.GetFullColor;
+    end;
+  o.Free;
+  r.Free;
+  Form1.Refresh;
+end;
+
+procedure ColorToHSIClick;
+var
+  i, j: word;
+  o: TColorPixel;
+begin
+  o := TColorPixel.Create;
+  for j := 0 to Form1.ImgOrigin.Height do
+    for i := 0 to Form1.ImgOrigin.Width do
+    begin
+      o.SetFullColor(Form1.ImgOrigin.Canvas.Pixels[i, j]);
+      Form1.ImgHue.Canvas.Pixels[i, j] := RGB(round(255 * o.GetHue / 360), round(255 * o.GetHue / 360), round(255 * o.GetHue / 360));
+      Form1.ImgSaturation.Canvas.Pixels[i, j] := RGB(round(o.GetSaturation * 255), round(o.GetSaturation * 255), round(o.GetSaturation * 255));
+      Form1.ImgIntensity.Canvas.Pixels[i, j] := RGB(round(o.GetIntensity * 255), round(o.GetIntensity * 255), round(o.GetIntensity * 255));
+    end;
+  o.Free;
+  Form1.Refresh;
+end;
+
+procedure HSIToColorClick;
+var
+  i, j: word;
+  o, r: TColorPixel;
+begin
+  o := TColorPixel.Create;
+  r := TColorPixel.Create;
+  for j := 0 to Form1.ImgOrigin.Height do
+    for i := 0 to Form1.ImgOrigin.Width do
+    begin
+      o.SetFullColor(Form1.ImgHue.Canvas.Pixels[i, j]);
+      r.SetHue(o.GetRed * 360);
+      o.SetFullColor(Form1.ImgSaturation.Canvas.Pixels[i, j]);
+      r.SetSaturation(o.GetRed);
+      o.SetFullColor(Form1.ImgIntensity.Canvas.Pixels[i, j]);
+      r.SetIntensity(o.GetRed);
+
+      Form1.ImgRestore.Canvas.Pixels[i, j] := r.GetFullColor;
+    end;
+  o.Free;
+  r.Free;
+  Form1.Refresh;
+end;
+
+procedure ColorToYIQClick;
+var
+  i, j: word;
+  o, r: TColorPixel;
+begin
+  o := TColorPixel.Create;
+  r := TColorPixel.Create;
+  for j := 0 to Form1.ImgOrigin.Height do
+    for i := 0 to Form1.ImgOrigin.Width do
+    begin
+      o.SetFullColor(Form1.ImgOrigin.Canvas.Pixels[i, j]);
+      r.SetY(o.GetY);
+      r.SetI((o.GetI + 0.595) / 1.191);
+      r.SetI(TruncateBits(r.GetI, Form1.UpDown1.Position) / 255);
+      r.SetQ((o.GetQ + 0.523) / 1.045);
+      r.SetQ(TruncateBits(r.GetQ, Form1.UpDown1.Position) / 255);
+      Form1.ImgY.Canvas.Pixels[i, j] := RGB(round(r.GetY * 255), round(r.GetY * 255), round(r.GetY * 255));
+      Form1.ImgI.Canvas.Pixels[i, j] := RGB(round(r.GetI * 255), round(r.GetI * 255), round(r.GetI * 255));
+      Form1.ImgQ.Canvas.Pixels[i, j] := RGB(round(r.GetQ * 255), round(r.GetQ * 255), round(r.GetQ * 255));
+    end;
+  Form1.Refresh;
 end;
 
 procedure YIQToColorClick;
 var
   i, j: word;
-  r, g, b: double;
-  Y, Ii, Q: double;
+  o, r: TColorPixel;
 begin
-  Form1.ImgRestore.Canvas.Pen.Color := clWhite;
-  Form1.ImgRestore.Canvas.Rectangle(0, 0, Form1.ImgRestore.Width, Form1.ImgRestore.Height);
+  o := TColorPixel.Create;
+  r := TColorPixel.Create;
   for j := 0 to Form1.ImgOrigin.Height do
     for i := 0 to Form1.ImgOrigin.Width do
     begin
-      UPixelConvert.TColorToRGB(Form1.ImgY.Canvas.Pixels[i, j], Y, Y, Y);
-      TColorToRGB(Form1.ImgI.Canvas.Pixels[i, j], Ii, Ii, Ii);
-      TColorToRGB(Form1.ImgQ.Canvas.Pixels[i, j], Q, Q, Q);
-      Ii := (byte(round(Ii * 255)) and 248) / 255;
-      Q := (byte(round(Q * 255)) and 248) / 255;
-      Ii := Ii * 1.191 - 0.595;
-      Q := Q * 1.045 - 0.523;
-      UPixelConvert.YIQToRGB(r, g, b, Y, Ii, Q);
-      Form1.ImgRestore.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(r, g, b);
+      o.SetFullColor(Form1.ImgY.Canvas.Pixels[i, j]);
+      r.SetY(o.GetRed);
+      o.SetFullColor(Form1.ImgI.Canvas.Pixels[i, j]);
+      r.SetI(o.GetRed);
+      o.SetFullColor(Form1.ImgQ.Canvas.Pixels[i, j]);
+      r.SetQ(o.GetRed);
 
-      if j mod RowStep = 0 then
-        Form1.ImgRestore.Refresh;
+      r.SetI((byte(round(r.GetI * 255)) and 248) / 255);
+      r.SetQ((byte(round(r.GetQ * 255)) and 248) / 255);
+      r.SetI(r.GetI * 1.191 - 0.595);
+      r.SetQ(r.GetQ * 1.045 - 0.523);
+
+      Form1.ImgRestore.Canvas.Pixels[i, j] := r.GetFullColor;
     end;
+  o.Free;
+  r.Free;
+  Form1.Refresh;
+end;
+
+procedure CompareImages;
+var
+  i, j: word;
+  o, r: TColorPixel;
+  dist: word;
+begin
+  o := TColorPixel.Create;
+  r := TColorPixel.Create;
+  for j := 0 to Form1.ImgOrigin.Height do
+    for i := 0 to Form1.ImgOrigin.Width do
+    begin
+      o.SetFullColor(Form1.ImgOrigin.Canvas.Pixels[i, j]);
+      r.SetFullColor(Form1.ImgRestore.Canvas.Pixels[i, j]);
+      dist := abs(round(255 * (o.GetRed - r.GetRed))) + abs(round(255 * (o.GetGreen - r.GetGreen))) + abs(round(255 * (o.GetBlue - r.GetBlue)));
+      if dist = 0 then
+        Form1.ImgDiff.Canvas.Pixels[i, j] := clWhite
+      else
+        if (dist > 0) and (dist < 50) then
+          Form1.ImgDiff.Canvas.Pixels[i, j] := clGreen
+        else
+          if (dist >= 50) and (dist < 170) then
+            Form1.ImgDiff.Canvas.Pixels[i, j] := clYellow
+          else
+            if dist >= 170 then
+              Form1.ImgDiff.Canvas.Pixels[i, j] := clRed
+
+    end;
+  o.Free;
+  r.Free;
+  Form1.Refresh;
+end;
+
+procedure PrepareImages;
+  procedure ClearImg(i: TImage);
+  begin
+    i.Canvas.Pen.Color := clGray;
+    i.Canvas.Brush.Color := clGray;
+    i.Canvas.Rectangle(0, 0, i.Width, i.Height);
+    i.Refresh;
+  end;
+
+begin
+  ClearImg(Form1.ImgRestore);
+  ClearImg(Form1.ImgDiff);
+  ClearImg(Form1.ImgRed);
+  ClearImg(Form1.ImgGreen);
+  ClearImg(Form1.ImgBlue);
+  ClearImg(Form1.ImgCyan);
+  ClearImg(Form1.ImgMagenta);
+  ClearImg(Form1.ImgYellow);
+  ClearImg(Form1.ImgKey);
+  ClearImg(Form1.ImgHue);
+  ClearImg(Form1.ImgSaturation);
+  ClearImg(Form1.ImgIntensity);
+  ClearImg(Form1.ImgY);
+  ClearImg(Form1.ImgI);
+  ClearImg(Form1.ImgQ);
+
+  Form1.Refresh;
 end;
 
 procedure TForm1.FormActivate(Sender: TObject);
 begin
-  ImgRestore.Canvas.Pen.Color := clWhite;
-  ImgRestore.Canvas.Rectangle(0, 0, ImgRestore.Width, ImgRestore.Height);
-  ImgDiff.Canvas.Pen.Color := clWhite;
-  ImgDiff.Canvas.Rectangle(0, 0, ImgDiff.Width, ImgDiff.Height);
-
-  ImgRed.Canvas.Pen.Color := clWhite;
-  ImgRed.Canvas.Rectangle(0, 0, ImgRed.Width, ImgGreen.Height);
-  ImgGreen.Canvas.Pen.Color := clWhite;
-  ImgGreen.Canvas.Rectangle(0, 0, ImgGreen.Width, ImgGreen.Height);
-  ImgBlue.Canvas.Pen.Color := clWhite;
-  ImgBlue.Canvas.Rectangle(0, 0, ImgBlue.Width, ImgBlue.Height);
-
-  ImgKey.Canvas.Pen.Color := clWhite;
-  ImgKey.Canvas.Rectangle(0, 0, ImgKey.Width, ImgKey.Height);
-  ImgCyan.Canvas.Pen.Color := clWhite;
-  ImgCyan.Canvas.Rectangle(0, 0, ImgCyan.Width, ImgCyan.Height);
-  ImgMagenta.Canvas.Pen.Color := clWhite;
-  ImgMagenta.Canvas.Rectangle(0, 0, ImgMagenta.Width, ImgMagenta.Height);
-  ImgYellow.Canvas.Pen.Color := clWhite;
-  ImgYellow.Canvas.Rectangle(0, 0, ImgYellow.Width, ImgYellow.Height);
-
-  ImgHue.Canvas.Pen.Color := clWhite;
-  ImgHue.Canvas.Rectangle(0, 0, ImgHue.Width, ImgHue.Height);
-  ImgSaturation.Canvas.Pen.Color := clWhite;
-  ImgSaturation.Canvas.Rectangle(0, 0, ImgSaturation.Width, ImgSaturation.Height);
-  ImgIntensity.Canvas.Pen.Color := clWhite;
-  ImgIntensity.Canvas.Rectangle(0, 0, ImgIntensity.Width, ImgIntensity.Height);
-
-  ImgY.Canvas.Pen.Color := clWhite;
-  ImgY.Canvas.Rectangle(0, 0, ImgY.Width, ImgY.Height);
-  ImgI.Canvas.Pen.Color := clWhite;
-  ImgI.Canvas.Rectangle(0, 0, ImgI.Width, ImgI.Height);
-  ImgQ.Canvas.Pen.Color := clWhite;
-  ImgQ.Canvas.Rectangle(0, 0, ImgQ.Width, ImgQ.Height);
+  PrepareImages;
 end;
 
 procedure TForm1.FormCanResize(Sender: TObject; var NewWidth, NewHeight: Integer; var Resize: Boolean);
 begin
   Resize := false;
-end;
-
-procedure TForm1.ImgOriginClick(Sender: TObject);
-  function Resize(BM: TBitMap; H, W: word): TBitMap;
-  var
-    r: TBitMap;
-  begin
-    r := TBitMap.Create;
-    r.Height := H;
-    r.Width := W;
-    r.Canvas.StretchDraw(Rect(0, 0, r.Width, r.Height), BM);
-    Resize := r;
-  end;
-
-var
-  BM: TBitMap;
-begin
-  if OpenPictureDialog1.Execute then
-  begin
-    BM := TBitMap.Create;
-    BM.LoadFromFile(OpenPictureDialog1.FileName);
-    BM := Resize(BM, ImgOrigin.Height, ImgOrigin.Width);
-    ImgOrigin.Picture.Bitmap.Assign(BM);
-    BM.Free;
-  end;
-end;
-
-procedure TForm1.ImgRestoreDblClick(Sender: TObject);
-begin
-  if SavePictureDialog1.Execute then
-    ImgRestore.Picture.SaveToFile(SavePictureDialog1.FileName);
 end;
 
 procedure TForm1.ImgRestoreMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
@@ -327,97 +349,10 @@ begin
   Image4.Canvas.Rectangle(0, 0, Image4.Width, Image4.Height);
 end;
 
-procedure ColorToCMYKClick;
-var
-  i, j: word;
-  r, g, b: double;
-  C, M, Y, K: double;
-begin
-  with Form1 do
-  begin
-    for j := 0 to ImgOrigin.Height do
-      for i := 0 to ImgOrigin.Width do
-      begin
-        UPixelConvert.TColorToRGB(ImgOrigin.Canvas.Pixels[i, j], r, g, b);
-        UPixelConvert.RGBToCMYK(r, g, b, C, M, Y, K);
-        ImgKey.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(K, K, K);
-        ImgCyan.Canvas.Pixels[i, j] := RGBToColor(C, C, C);
-        ImgMagenta.Canvas.Pixels[i, j] := RGBToColor(M, M, M);
-        ImgYellow.Canvas.Pixels[i, j] := RGBToColor(Y, Y, Y);
-        if j mod RowStep = 0 then
-        begin
-          ImgKey.Refresh;
-          ImgCyan.Refresh;
-          ImgMagenta.Refresh;
-          ImgYellow.Refresh;
-        end;
-      end;
-    ImgKey.Picture.SaveToFile('key.bmp');
-    ImgCyan.Picture.SaveToFile('cyan.bmp');
-    ImgMagenta.Picture.SaveToFile('magenta.bmp');
-    ImgYellow.Picture.SaveToFile('yellow.bmp');
-  end;
-end;
-
-procedure ColorToHSIClick;
-var
-  i, j: word;
-  r, g, b: double;
-  H, S, V: double;
-begin
-  with Form1 do
-  begin
-    for j := 0 to ImgOrigin.Height do
-      for i := 0 to ImgOrigin.Width do
-      begin
-        UPixelConvert.TColorToRGB(ImgOrigin.Canvas.Pixels[i, j], r, g, b);
-        UPixelConvert.RGBToHSI(r, g, b, H, S, V);
-        ImgHue.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(H / 360, H / 360, H / 360);
-        ImgSaturation.Canvas.Pixels[i, j] := RGBToColor(S, S, S);
-        ImgIntensity.Canvas.Pixels[i, j] := RGBToColor(V, V, V);
-
-        if j mod RowStep = 0 then
-        begin
-          ImgHue.Refresh;
-          ImgSaturation.Refresh;
-          ImgIntensity.Refresh;
-        end;
-      end;
-    ImgHue.Picture.SaveToFile('hue.bmp');
-    ImgSaturation.Picture.SaveToFile('saturation.bmp');
-    ImgIntensity.Picture.SaveToFile('intensity.bmp');
-  end;
-end;
-
-procedure CMYKToColorClick;
-var
-  i, j: word;
-  r, g, b: double;
-  C, M, Y, K: double;
-begin
-  with Form1 do
-  begin
-    ImgRestore.Canvas.Pen.Color := clWhite;
-    ImgRestore.Canvas.Rectangle(0, 0, ImgRestore.Width, ImgRestore.Height);
-    for j := 0 to ImgOrigin.Height do
-      for i := 0 to ImgOrigin.Width do
-      begin
-        UPixelConvert.TColorToRGB(ImgKey.Canvas.Pixels[i, j], K, K, K);
-        TColorToRGB(ImgCyan.Canvas.Pixels[i, j], C, C, C);
-        TColorToRGB(ImgMagenta.Canvas.Pixels[i, j], M, M, M);
-        TColorToRGB(ImgYellow.Canvas.Pixels[i, j], Y, Y, Y);
-        UPixelConvert.CMYKToRGB(r, g, b, C, M, Y, K);
-        ImgRestore.Canvas.Pixels[i, j] := UPixelConvert.RGBToColor(r, g, b);
-
-        if j mod RowStep = 0 then
-          ImgRestore.Refresh;
-      end;
-  end;
-end;
-
 procedure TForm1.BRGBClick(Sender: TObject);
 begin
   PageControl1.TabIndex := 0;
+  PrepareImages;
   ColorToRGBClick;
   RGBToColorClick;
   CompareImages;
@@ -426,6 +361,7 @@ end;
 procedure TForm1.BCMYKClick(Sender: TObject);
 begin
   PageControl1.TabIndex := 1;
+  PrepareImages;
   ColorToCMYKClick;
   CMYKToColorClick;
   CompareImages;
@@ -434,6 +370,7 @@ end;
 procedure TForm1.BHSIClick(Sender: TObject);
 begin
   PageControl1.TabIndex := 2;
+  PrepareImages;
   ColorToHSIClick;
   HSIToColorClick;
   CompareImages;
@@ -442,9 +379,11 @@ end;
 procedure TForm1.BYIQClick(Sender: TObject);
 begin
   PageControl1.TabIndex := 3;
+  PrepareImages;
   ColorToYIQClick;
   YIQToColorClick;
   CompareImages;
 end;
 
 end.
+
