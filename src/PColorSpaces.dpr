@@ -2,7 +2,7 @@ program PColorSpaces;
 
 uses
   Vcl.Forms,
-  UFMain in 'UFMain.pas' {Form1},
+  UFMain in 'UFMain.pas' {FMain},
   UPixelConvert in '..\..\ImgSharedUnits\src\UPixelConvert.pas';
 
 {$R *.res}
@@ -10,6 +10,6 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFMain, FMain);
   Application.Run;
 end.
