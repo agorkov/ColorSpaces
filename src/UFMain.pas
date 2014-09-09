@@ -46,7 +46,6 @@ type
     ImgRestoredTest: TImage;
     RGVertical: TRadioGroup;
     RGHorizontal: TRadioGroup;
-    BFillImage: TButton;
     OPD: TOpenPictureDialog;
     procedure ImgRestoredMouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
@@ -57,8 +56,8 @@ type
     procedure BYIQClick(Sender: TObject);
     procedure FormCanResize(Sender: TObject; var NewWidth, NewHeight: Integer;
       var Resize: Boolean);
-    procedure BFillImageClick(Sender: TObject);
     procedure ImgOriginClick(Sender: TObject);
+    procedure RGVerticalClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -495,7 +494,7 @@ begin
   Randomize;
   RGVertical.ItemIndex := random(3);
   RGHorizontal.ItemIndex := random(3);
-  BFillImageClick(nil);
+  RGVerticalClick(nil);
   PrepareImages;
 end;
 
@@ -541,6 +540,43 @@ begin
     ImgRestoredTest.Height);
 end;
 
+procedure TFMain.RGVerticalClick(Sender: TObject);
+var
+  i, j: word;
+  r, g, b: byte;
+  BM: TBitmap;
+begin
+  BM := TBitmap.Create;
+  BM.Height := 255;
+  BM.Width := 255;
+  r := 0;
+  g := 0;
+  b := 0;
+  for j := 0 to BM.Height do
+    for i := 0 to BM.Width do
+    begin
+      case RGVertical.ItemIndex of
+        0:
+          r := j;
+        1:
+          g := j;
+        2:
+          b := j;
+      end;
+      case RGHorizontal.ItemIndex of
+        0:
+          r := i;
+        1:
+          g := i;
+        2:
+          b := i;
+      end;
+      BM.Canvas.Pixels[i, j] := RGB(r, g, b);
+    end;
+  ImgOrigin.Picture.Assign(BM);
+  BM.Free;
+end;
+
 procedure TFMain.BRGBClick(Sender: TObject);
 begin
   PCColorSpaces.TabIndex := 0;
@@ -578,43 +614,6 @@ begin
   ImgYellow.Picture.SaveToFile('cc3_Yellow.bmp');
   ImgKey.Picture.SaveToFile('cc4_KeyColor.bmp');
   ChDir('..');
-end;
-
-procedure TFMain.BFillImageClick(Sender: TObject);
-var
-  i, j: word;
-  r, g, b: byte;
-  BM: TBitmap;
-begin
-  BM := TBitmap.Create;
-  BM.Height := 255;
-  BM.Width := 255;
-  r := 0;
-  g := 0;
-  b := 0;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      case RGVertical.ItemIndex of
-        0:
-          r := j;
-        1:
-          g := j;
-        2:
-          b := j;
-      end;
-      case RGHorizontal.ItemIndex of
-        0:
-          r := i;
-        1:
-          g := i;
-        2:
-          b := i;
-      end;
-      BM.Canvas.Pixels[i, j] := RGB(r, g, b);
-    end;
-  ImgOrigin.Picture.Assign(BM);
-  BM.Free;
 end;
 
 procedure TFMain.BHSIClick(Sender: TObject);

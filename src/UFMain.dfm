@@ -298,6 +298,7 @@ object FMain: TFMain
       'G'
       'B')
     TabOrder = 6
+    OnClick = RGVerticalClick
   end
   object RGHorizontal: TRadioGroup
     Left = 276
@@ -312,15 +313,7 @@ object FMain: TFMain
       'G'
       'B')
     TabOrder = 7
-  end
-  object BFillImage: TButton
-    Left = 276
-    Top = 200
-    Width = 90
-    Height = 25
-    Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100
-    TabOrder = 8
-    OnClick = BFillImageClick
+    OnClick = RGVerticalClick
   end
   object OPD: TOpenPictureDialog
     Filter = 
