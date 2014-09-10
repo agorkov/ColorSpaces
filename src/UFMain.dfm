@@ -36,7 +36,7 @@ object FMain: TFMain
     0000000000000000000000000000000000000000000000000000000000000000
     000000000000000000000000000000000000000000000000000000000000}
   OldCreateOrder = False
-  Position = poDesktopCenter
+  Position = poScreenCenter
   OnActivate = FormActivate
   OnCanResize = FormCanResize
   PixelsPerInch = 96
@@ -77,14 +77,10 @@ object FMain: TFMain
     Top = 269
     Width = 1046
     Height = 292
-    ActivePage = TSHSI
+    ActivePage = TSRGB
     TabOrder = 0
     object TSRGB: TTabSheet
       Caption = 'RGB'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object ImgRed: TImage
         Left = 68
         Top = 3
@@ -116,10 +112,6 @@ object FMain: TFMain
     object TSCMYK: TTabSheet
       Caption = 'CMYK'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object ImgKey: TImage
         Left = 777
         Top = 3
@@ -191,10 +183,6 @@ object FMain: TFMain
     object TSYIQ: TTabSheet
       Caption = 'YIQ'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object ImgI: TImage
         Left = 391
         Top = 3

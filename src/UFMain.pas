@@ -72,7 +72,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Math, UPixelConvert;
+  Math, UPixelConvert, UFileConvert;
 
 const
   RowStep = 10;
@@ -507,7 +507,7 @@ end;
 procedure TFMain.ImgOriginClick(Sender: TObject);
 begin
   if OPD.Execute then
-    ImgOrigin.Picture.LoadFromFile(OPD.FileName);
+    ImgOrigin.Picture.Assign(UFileConvert.LoadFile(OPD.FileName));
 end;
 
 procedure TFMain.ImgRestoredMouseMove(Sender: TObject; Shift: TShiftState;
