@@ -72,344 +72,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Math, UPixelConvert, UFileConvert;
-
-const
-  RowStep = 10;
-
-procedure ColorToRGBClick;
-var
-  i, j: word;
-  o: TColorPixel;
-  BM, BMRed, BMGreen, BMBlue: TBitmap;
-begin
-  BM := TBitmap.Create;
-  BM.Assign(FMain.ImgOrigin.Picture);
-  BMRed := TBitmap.Create;
-  BMRed.Height := BM.Height;
-  BMRed.Width := BM.Width;
-  BMGreen := TBitmap.Create;
-  BMGreen.Height := BM.Height;
-  BMGreen.Width := BM.Width;
-  BMBlue := TBitmap.Create;
-  BMBlue.Height := BM.Height;
-  BMBlue.Width := BM.Width;
-  o := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BM.Canvas.Pixels[i, j]);
-      BMRed.Canvas.Pixels[i, j] := RGB(round(o.GetRed * 255),
-        round(o.GetRed * 255), round(o.GetRed * 255));
-      BMGreen.Canvas.Pixels[i, j] := RGB(round(o.GetGreen * 255),
-        round(o.GetGreen * 255), round(o.GetGreen * 255));
-      BMBlue.Canvas.Pixels[i, j] := RGB(round(o.GetBlue * 255),
-        round(o.GetBlue * 255), round(o.GetBlue * 255));
-    end;
-  FMain.ImgRed.Picture.Assign(BMRed);
-  FMain.ImgGreen.Picture.Assign(BMGreen);
-  FMain.ImgBlue.Picture.Assign(BMBlue);
-  BM.Free;
-  BMRed.Free;
-  BMGreen.Free;
-  BMBlue.Free;
-  o.Free;
-  FMain.Refresh;
-end;
-
-procedure RGBToColorClick;
-var
-  i, j: word;
-  o, r: TColorPixel;
-  BM, BMRed, BMGreen, BMBlue: TBitmap;
-begin
-  BMRed := TBitmap.Create;
-  BMRed.Assign(FMain.ImgRed.Picture);
-  BMGreen := TBitmap.Create;
-  BMGreen.Assign(FMain.ImgGreen.Picture);
-  BMBlue := TBitmap.Create;
-  BMBlue.Assign(FMain.ImgBlue.Picture);
-  BM := TBitmap.Create;
-  BM.Height := BMRed.Height;
-  BM.Width := BMRed.Width;
-  o := TColorPixel.Create;
-  r := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BMRed.Canvas.Pixels[i, j]);
-      r.SetRed(o.GetRed);
-      o.SetFullColor(BMGreen.Canvas.Pixels[i, j]);
-      r.SetGreen(o.GetRed);
-      o.SetFullColor(BMBlue.Canvas.Pixels[i, j]);
-      r.SetBlue(o.GetRed);
-      BM.Canvas.Pixels[i, j] := r.GetFullColor;
-    end;
-  o.Free;
-  r.Free;
-  FMain.ImgRestored.Picture.Assign(BM);
-  BM.Free;
-  BMRed.Free;
-  BMGreen.Free;
-  BMBlue.Free;
-  FMain.Refresh;
-end;
-
-procedure ColorToCMYKClick;
-var
-  i, j: word;
-  o: TColorPixel;
-  BM, BMCyan, BMMagenta, BMYellow, BMKeyColor: TBitmap;
-begin
-  BM := TBitmap.Create;
-  BM.Assign(FMain.ImgOrigin.Picture);
-  BMCyan := TBitmap.Create;
-  BMCyan.Height := BM.Height;
-  BMCyan.Width := BM.Width;
-  BMMagenta := TBitmap.Create;
-  BMMagenta.Height := BM.Height;
-  BMMagenta.Width := BM.Width;
-  BMYellow := TBitmap.Create;
-  BMYellow.Height := BM.Height;
-  BMYellow.Width := BM.Width;
-  BMKeyColor := TBitmap.Create;
-  BMKeyColor.Height := BM.Height;
-  BMKeyColor.Width := BM.Width;
-  o := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BM.Canvas.Pixels[i, j]);
-      BMCyan.Canvas.Pixels[i, j] := RGB(round(o.GetCyan * 255),
-        round(o.GetCyan * 255), round(o.GetCyan * 255));
-      BMMagenta.Canvas.Pixels[i, j] := RGB(round(o.GetMagenta * 255),
-        round(o.GetMagenta * 255), round(o.GetMagenta * 255));
-      BMYellow.Canvas.Pixels[i, j] := RGB(round(o.GetYellow * 255),
-        round(o.GetYellow * 255), round(o.GetYellow * 255));
-      BMKeyColor.Canvas.Pixels[i, j] := RGB(round(o.GetKeyColor * 255),
-        round(o.GetKeyColor * 255), round(o.GetKeyColor * 255));
-    end;
-  FMain.ImgCyan.Picture.Assign(BMCyan);
-  FMain.ImgMagenta.Picture.Assign(BMMagenta);
-  FMain.ImgYellow.Picture.Assign(BMYellow);
-  FMain.ImgKey.Picture.Assign(BMKeyColor);
-  BM.Free;
-  BMCyan.Free;
-  BMMagenta.Free;
-  BMYellow.Free;
-  BMKeyColor.Free;
-  o.Free;
-  FMain.Refresh;
-end;
-
-procedure CMYKToColorClick;
-var
-  i, j: word;
-  o, r: TColorPixel;
-  BM, BMCyan, BMMagenta, BMYellow, BMKeyColor: TBitmap;
-begin
-  BMCyan := TBitmap.Create;
-  BMCyan.Assign(FMain.ImgCyan.Picture);
-  BMMagenta := TBitmap.Create;
-  BMMagenta.Assign(FMain.ImgMagenta.Picture);
-  BMYellow := TBitmap.Create;
-  BMYellow.Assign(FMain.ImgYellow.Picture);
-  BMKeyColor := TBitmap.Create;
-  BMKeyColor.Assign(FMain.ImgKey.Picture);
-  BM := TBitmap.Create;
-  BM.Height := BMCyan.Height;
-  BM.Width := BMCyan.Width;
-  o := TColorPixel.Create;
-  r := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BMCyan.Canvas.Pixels[i, j]);
-      r.SetCyan(o.GetRed);
-      o.SetFullColor(BMMagenta.Canvas.Pixels[i, j]);
-      r.SetMagenta(o.GetRed);
-      o.SetFullColor(BMYellow.Canvas.Pixels[i, j]);
-      r.SetYellow(o.GetRed);
-      o.SetFullColor(BMKeyColor.Canvas.Pixels[i, j]);
-      r.SetKeyColor(o.GetRed);
-
-      BM.Canvas.Pixels[i, j] := r.GetFullColor;
-    end;
-  o.Free;
-  r.Free;
-  FMain.ImgRestored.Picture.Assign(BM);
-  BM.Free;
-  BMCyan.Free;
-  BMMagenta.Free;
-  BMYellow.Free;
-  BMKeyColor.Free;
-  FMain.Refresh;
-end;
-
-procedure ColorToHSIClick;
-var
-  i, j: word;
-  o: TColorPixel;
-  BM, BMHue, BMSaturation, BMIntensity: TBitmap;
-begin
-  BM := TBitmap.Create;
-  BM.Assign(FMain.ImgOrigin.Picture);
-  BMHue := TBitmap.Create;
-  BMHue.Height := BM.Height;
-  BMHue.Width := BM.Width;
-  BMSaturation := TBitmap.Create;
-  BMSaturation.Height := BM.Height;
-  BMSaturation.Width := BM.Width;
-  BMIntensity := TBitmap.Create;
-  BMIntensity.Height := BM.Height;
-  BMIntensity.Width := BM.Width;
-  o := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BM.Canvas.Pixels[i, j]);
-      BMHue.Canvas.Pixels[i, j] := RGB(round(255 * o.GetHue / 360),
-        round(255 * o.GetHue / 360), round(255 * o.GetHue / 360));
-      BMSaturation.Canvas.Pixels[i, j] := RGB(round(o.GetSaturation * 255),
-        round(o.GetSaturation * 255), round(o.GetSaturation * 255));
-      BMIntensity.Canvas.Pixels[i, j] := RGB(round(o.GetIntensity * 255),
-        round(o.GetIntensity * 255), round(o.GetIntensity * 255));
-    end;
-  o.Free;
-  FMain.ImgHue.Picture.Assign(BMHue);
-  FMain.ImgSaturation.Picture.Assign(BMSaturation);
-  FMain.ImgIntensity.Picture.Assign(BMIntensity);
-  BM.Free;
-  BMHue.Free;
-  BMSaturation.Free;
-  BMIntensity.Free;
-  FMain.Refresh;
-end;
-
-procedure HSIToColorClick;
-var
-  i, j: word;
-  o, r: TColorPixel;
-  BM, BMHue, BMSaturation, BMIntensity: TBitmap;
-begin
-  BMHue := TBitmap.Create;
-  BMHue.Assign(FMain.ImgHue.Picture);
-  BMSaturation := TBitmap.Create;
-  BMSaturation.Assign(FMain.ImgSaturation.Picture);
-  BMIntensity := TBitmap.Create;
-  BMIntensity.Assign(FMain.ImgIntensity.Picture);
-  BM := TBitmap.Create;
-  BM.Height := BMHue.Height;
-  BM.Width := BMHue.Width;
-  o := TColorPixel.Create;
-  r := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BMHue.Canvas.Pixels[i, j]);
-      r.SetHue(o.GetRed * 360);
-      o.SetFullColor(BMSaturation.Canvas.Pixels[i, j]);
-      r.SetSaturation(o.GetRed);
-      o.SetFullColor(BMIntensity.Canvas.Pixels[i, j]);
-      r.SetIntensity(o.GetRed);
-      BM.Canvas.Pixels[i, j] := r.GetFullColor;
-    end;
-  o.Free;
-  r.Free;
-  FMain.ImgRestored.Picture.Assign(BM);
-  BM.Free;
-  BMHue.Free;
-  BMSaturation.Free;
-  BMIntensity.Free;
-  FMain.Refresh;
-end;
-
-procedure ColorToYIQClick;
-var
-  i, j: word;
-  o, r: TColorPixel;
-  BM, BMY, BMI, BMQ: TBitmap;
-begin
-  BM := TBitmap.Create;
-  BM.Assign(FMain.ImgOrigin.Picture);
-  BMY := TBitmap.Create;
-  BMY.Height := BM.Height;
-  BMY.Width := BM.Width;
-  BMI := TBitmap.Create;
-  BMI.Height := BM.Height;
-  BMI.Width := BM.Width;
-  BMQ := TBitmap.Create;
-  BMQ.Height := BM.Height;
-  BMQ.Width := BM.Width;
-  o := TColorPixel.Create;
-  r := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BM.Canvas.Pixels[i, j]);
-      r.SetY(o.GetY);
-      r.SetI((o.GetI + 0.595) / 1.191);
-      // r.SetI(TruncateBits(r.GetI, FMain.UpDown1.Position) / 255);
-      r.SetQ((o.GetQ + 0.523) / 1.045);
-      // r.SetQ(TruncateBits(r.GetQ, FMain.UpDown1.Position) / 255);
-      BMY.Canvas.Pixels[i, j] := RGB(round(r.GetY * 255), round(r.GetY * 255),
-        round(r.GetY * 255));
-      BMI.Canvas.Pixels[i, j] := RGB(round(r.GetI * 255), round(r.GetI * 255),
-        round(r.GetI * 255));
-      BMQ.Canvas.Pixels[i, j] := RGB(round(r.GetQ * 255), round(r.GetQ * 255),
-        round(r.GetQ * 255));
-    end;
-  FMain.ImgY.Picture.Assign(BMY);
-  FMain.ImgI.Picture.Assign(BMI);
-  FMain.ImgQ.Picture.Assign(BMQ);
-  BM.Free;
-  BMY.Free;
-  BMI.Free;
-  BMQ.Free;
-  FMain.Refresh;
-end;
-
-procedure YIQToColorClick;
-var
-  i, j: word;
-  o, r: TColorPixel;
-  BM, BMY, BMI, BMQ: TBitmap;
-begin
-  BMY := TBitmap.Create;
-  BMY.Assign(FMain.ImgY.Picture);
-  BMI := TBitmap.Create;
-  BMI.Assign(FMain.ImgI.Picture);
-  BMQ := TBitmap.Create;
-  BMQ.Assign(FMain.ImgQ.Picture);
-  BM := TBitmap.Create;
-  BM.Height := BMY.Height;
-  BM.Width := BMY.Width;
-  o := TColorPixel.Create;
-  r := TColorPixel.Create;
-  for j := 0 to BM.Height do
-    for i := 0 to BM.Width do
-    begin
-      o.SetFullColor(BMY.Canvas.Pixels[i, j]);
-      r.SetY(o.GetRed);
-      o.SetFullColor(BMI.Canvas.Pixels[i, j]);
-      r.SetI(o.GetRed);
-      o.SetFullColor(BMQ.Canvas.Pixels[i, j]);
-      r.SetQ(o.GetRed);
-      r.SetI((byte(round(r.GetI * 255)) and 248) / 255);
-      r.SetQ((byte(round(r.GetQ * 255)) and 248) / 255);
-      r.SetI(r.GetI * 1.191 - 0.595);
-      r.SetQ(r.GetQ * 1.045 - 0.523);
-      BM.Canvas.Pixels[i, j] := r.GetFullColor;
-    end;
-  o.Free;
-  r.Free;
-  FMain.ImgRestored.Picture.Assign(BM);
-  BM.Free;
-  BMY.Free;
-  BMI.Free;
-  BMQ.Free;
-  FMain.Refresh;
-end;
+  Math, UPixelConvert, UFileConvert, UColorImages, UGrayscaleImages;
 
 procedure CompareImages;
 var
@@ -507,37 +170,55 @@ end;
 procedure TFMain.ImgOriginClick(Sender: TObject);
 begin
   if OPD.Execute then
+  begin
     ImgOrigin.Picture.Assign(UFileConvert.LoadFile(OPD.FileName));
+    ImgRestored.Tag := 0;
+    PrepareImages;
+  end;
 end;
 
 procedure TFMain.ImgRestoredMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 var
-  r, g, b: byte;
+  px, py: word;
+  CIO, CIR: TCColorImage;
 begin
-  LPosition.Caption := 'x= ' + inttostr(X) + ' y= ' + inttostr(Y);
-  r := ImgOrigin.Canvas.Pixels[X, Y];
-  g := ImgOrigin.Canvas.Pixels[X, Y] shr 8;
-  b := ImgOrigin.Canvas.Pixels[X, Y] shr 16;
-  LROrigin.Caption := 'r=' + inttostr(r);
-  LGOrigin.Caption := 'g=' + inttostr(g);
-  LBOrigin.Caption := 'b=' + inttostr(b);
-  ImgOriginTest.Canvas.Pen.Color := RGB(r, g, b);
-  ImgOriginTest.Canvas.Brush.Color := RGB(r, g, b);
-  ImgOriginTest.Canvas.Brush.Style := bsSolid;
-  ImgOriginTest.Canvas.Rectangle(0, 0, ImgOriginTest.Width,
-    ImgOriginTest.Height);
-  r := ImgRestored.Canvas.Pixels[X, Y];
-  g := ImgRestored.Canvas.Pixels[X, Y] shr 8;
-  b := ImgRestored.Canvas.Pixels[X, Y] shr 16;
-  LRRestored.Caption := 'r=' + inttostr(r);
-  LGRestored.Caption := 'g=' + inttostr(g);
-  LBRestored.Caption := 'b=' + inttostr(b);
-  ImgRestoredTest.Canvas.Pen.Color := RGB(r, g, b);
-  ImgRestoredTest.Canvas.Brush.Color := RGB(r, g, b);
-  ImgRestoredTest.Canvas.Brush.Style := bsSolid;
-  ImgRestoredTest.Canvas.Rectangle(0, 0, ImgRestoredTest.Width,
-    ImgRestoredTest.Height);
+  if ImgRestored.Tag = 1 then
+  begin
+    CIO := TCColorImage.CreateAndLoadFromBitmap(ImgOrigin.Picture.Bitmap);
+    CIR := TCColorImage.CreateAndLoadFromBitmap(ImgRestored.Picture.Bitmap);
+    py := round(X * CIO.GetWidth / ImgOrigin.Width);
+    px := round(Y * CIO.GetHeight / ImgOrigin.Height);
+    if px >= CIO.GetWidth then
+      px := px - 1;
+    if py >= CIO.GetHeight then
+      py := py - 1;
+    LPosition.Caption := 'row= ' + inttostr(px + 1) + ' col= ' +
+      inttostr(py + 1);
+    LROrigin.Caption := 'r=' + inttostr(round(CIO.Pixels[px, py].GetRed * 255));
+    LGOrigin.Caption := 'g=' +
+      inttostr(round(CIO.Pixels[px, py].GetGreen * 255));
+    LBOrigin.Caption := 'b=' +
+      inttostr(round(CIO.Pixels[px, py].GetBlue * 255));
+    ImgOriginTest.Canvas.Pen.Color := CIO.Pixels[px, py].GetFullColor;
+    ImgOriginTest.Canvas.Brush.Color := CIO.Pixels[px, py].GetFullColor;
+    ImgOriginTest.Canvas.Brush.Style := bsSolid;
+    ImgOriginTest.Canvas.Rectangle(0, 0, ImgOriginTest.Width,
+      ImgOriginTest.Height);
+    LRRestored.Caption := 'r=' +
+      inttostr(round(CIR.Pixels[px, py].GetRed * 255));
+    LGRestored.Caption := 'g=' +
+      inttostr(round(CIR.Pixels[px, py].GetGreen * 255));
+    LBRestored.Caption := 'b=' +
+      inttostr(round(CIR.Pixels[px, py].GetBlue * 255));
+    ImgRestoredTest.Canvas.Pen.Color := CIR.Pixels[px, py].GetFullColor;
+    ImgRestoredTest.Canvas.Brush.Color := CIR.Pixels[px, py].GetFullColor;
+    ImgRestoredTest.Canvas.Brush.Style := bsSolid;
+    ImgRestoredTest.Canvas.Rectangle(0, 0, ImgRestoredTest.Width,
+      ImgRestoredTest.Height);
+    CIO.Free;
+    CIR.Free;
+  end;
 end;
 
 procedure TFMain.RGVerticalClick(Sender: TObject);
@@ -578,11 +259,38 @@ begin
 end;
 
 procedure TFMain.BRGBClick(Sender: TObject);
+  procedure ColorToRGB;
+  var
+    CI: TCColorImage;
+  begin
+    CI := TCColorImage.CreateAndLoadFromBitmap(ImgOrigin.Picture.Bitmap);
+    FMain.ImgRed.Picture.Assign(CI.GetChanel(ccRed).SaveToBitMap);
+    FMain.ImgGreen.Picture.Assign(CI.GetChanel(ccGreen).SaveToBitMap);
+    FMain.ImgBlue.Picture.Assign(CI.GetChanel(ccBlue).SaveToBitMap);
+    CI.Free;
+  end;
+  procedure RGBToColor;
+  var
+    CI: TCColorImage;
+    GS: TCGrayscaleImage;
+  begin
+    CI := TCColorImage.Create;
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgRed.Picture.Bitmap);
+    CI.SetChannel(ccRed, GS);
+    GS.LoadFromBitMap(ImgGreen.Picture.Bitmap);
+    CI.SetChannel(ccGreen, GS);
+    GS.LoadFromBitMap(ImgBlue.Picture.Bitmap);
+    CI.SetChannel(ccBlue, GS);
+    FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
+    GS.Free;
+    CI.Free;
+  end;
+
 begin
   PCColorSpaces.TabIndex := 0;
   PrepareImages;
-  ColorToRGBClick;
-  RGBToColorClick;
+  ColorToRGB;
+  RGBToColor;
   CompareImages;
   if not DirectoryExists('RGB') then
     MkDir('RGB');
@@ -594,14 +302,44 @@ begin
   ImgGreen.Picture.SaveToFile('cc2_Green.bmp');
   ImgBlue.Picture.SaveToFile('cc3_Blue.bmp');
   ChDir('..');
+  ImgRestored.Tag := 1;
 end;
 
 procedure TFMain.BCMYKClick(Sender: TObject);
+  procedure ColorToCMYK;
+  var
+    CI: TCColorImage;
+  begin
+    CI := TCColorImage.CreateAndLoadFromBitmap(ImgOrigin.Picture.Bitmap);
+    FMain.ImgCyan.Picture.Assign(CI.GetChanel(ccCyan).SaveToBitMap);
+    FMain.ImgMagenta.Picture.Assign(CI.GetChanel(ccMagenta).SaveToBitMap);
+    FMain.ImgYellow.Picture.Assign(CI.GetChanel(ccYellow).SaveToBitMap);
+    FMain.ImgKey.Picture.Assign(CI.GetChanel(ccKeyColor).SaveToBitMap);
+  end;
+  procedure CMYKToColor;
+  var
+    CI: TCColorImage;
+    GS: TCGrayscaleImage;
+  begin
+    CI := TCColorImage.Create;
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgCyan.Picture.Bitmap);
+    CI.SetChannel(ccCyan, GS);
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgMagenta.Picture.Bitmap);
+    CI.SetChannel(ccMagenta, GS);
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgYellow.Picture.Bitmap);
+    CI.SetChannel(ccYellow, GS);
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgKey.Picture.Bitmap);
+    CI.SetChannel(ccKeyColor, GS);
+    FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
+    GS.Free;
+    CI.Free;
+  end;
+
 begin
   PCColorSpaces.TabIndex := 1;
   PrepareImages;
-  ColorToCMYKClick;
-  CMYKToColorClick;
+  ColorToCMYK;
+  CMYKToColor;
   CompareImages;
   if not DirectoryExists('CMYK') then
     MkDir('CMYK');
@@ -614,14 +352,43 @@ begin
   ImgYellow.Picture.SaveToFile('cc3_Yellow.bmp');
   ImgKey.Picture.SaveToFile('cc4_KeyColor.bmp');
   ChDir('..');
+  ImgRestored.Tag := 1;
 end;
 
 procedure TFMain.BHSIClick(Sender: TObject);
+  procedure ColorToHSI;
+  var
+    CI: TCColorImage;
+  begin
+    CI := TCColorImage.CreateAndLoadFromBitmap(ImgOrigin.Picture.Bitmap);
+    FMain.ImgHue.Picture.Assign(CI.GetChanel(ccHue).SaveToBitMap);
+    FMain.ImgSaturation.Picture.Assign(CI.GetChanel(ccSaturation).SaveToBitMap);
+    FMain.ImgIntensity.Picture.Assign(CI.GetChanel(ccIntensity).SaveToBitMap);
+    CI.Free;
+  end;
+  procedure HSIToColor;
+  var
+    CI: TCColorImage;
+    GS: TCGrayscaleImage;
+  begin
+    CI := TCColorImage.Create;
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgHue.Picture.Bitmap);
+    CI.SetChannel(ccHue, GS);
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap
+      (ImgSaturation.Picture.Bitmap);
+    CI.SetChannel(ccSaturation, GS);
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgIntensity.Picture.Bitmap);
+    CI.SetChannel(ccIntensity, GS);
+    FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
+    GS.Free;
+    CI.Free;
+  end;
+
 begin
   PCColorSpaces.TabIndex := 2;
   PrepareImages;
-  ColorToHSIClick;
-  HSIToColorClick;
+  ColorToHSI;
+  HSIToColor;
   CompareImages;
   if not DirectoryExists('HSI') then
     MkDir('HSI');
@@ -633,14 +400,41 @@ begin
   ImgSaturation.Picture.SaveToFile('cc2_Saturation.bmp');
   ImgIntensity.Picture.SaveToFile('cc3_Intensity.bmp');
   ChDir('..');
+  ImgRestored.Tag := 1;
 end;
 
 procedure TFMain.BYIQClick(Sender: TObject);
+  procedure ColorToYIQ;
+  var
+    CI: TCColorImage;
+  begin
+    CI := TCColorImage.CreateAndLoadFromBitmap(ImgOrigin.Picture.Bitmap);
+    FMain.ImgY.Picture.Assign(CI.GetChanel(ccY).SaveToBitMap);
+    FMain.ImgI.Picture.Assign(CI.GetChanel(ccI).SaveToBitMap);
+    FMain.ImgQ.Picture.Assign(CI.GetChanel(ccQ).SaveToBitMap);
+  end;
+  procedure YIQToColor;
+  var
+    CI: TCColorImage;
+    GS: TCGrayscaleImage;
+  begin
+    CI := TCColorImage.Create;
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgY.Picture.Bitmap);
+    CI.SetChannel(ccY, GS);
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgI.Picture.Bitmap);
+    CI.SetChannel(ccI, GS);
+    GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgQ.Picture.Bitmap);
+    CI.SetChannel(ccQ, GS);
+    FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
+    GS.Free;
+    CI.Free;
+  end;
+
 begin
   PCColorSpaces.TabIndex := 3;
   PrepareImages;
-  ColorToYIQClick;
-  YIQToColorClick;
+  ColorToYIQ;
+  YIQToColor;
   CompareImages;
   if not DirectoryExists('YIQ') then
     MkDir('YIQ');
@@ -652,6 +446,7 @@ begin
   ImgI.Picture.SaveToFile('cc2_I.bmp');
   ImgQ.Picture.SaveToFile('cc3_Q.bmp');
   ChDir('..');
+  ImgRestored.Tag := 1;
 end;
 
 end.
