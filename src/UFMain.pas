@@ -110,9 +110,9 @@ begin
   o.Free;
   r.Free;
   FMain.ImgDiff.Picture.Assign(BMD);
-  BMO.Free;
-  BMR.Free;
-  BMD.Free;
+  BMO.FreeImage;
+  BMR.FreeImage;
+  BMD.FreeImage;
   FMain.Refresh;
 end;
 
@@ -216,8 +216,8 @@ begin
     ImgRestoredTest.Canvas.Brush.Style := bsSolid;
     ImgRestoredTest.Canvas.Rectangle(0, 0, ImgRestoredTest.Width,
       ImgRestoredTest.Height);
-    CIO.Free;
-    CIR.Free;
+    CIO.FreeImage;
+    CIR.FreeImage;
   end;
 end;
 
@@ -262,12 +262,30 @@ procedure TFMain.BRGBClick(Sender: TObject);
   procedure ColorToRGB;
   var
     CI: TCColorImage;
+    GS: TCGrayscaleImage;
+    BM: TBitmap;
   begin
     CI := TCColorImage.CreateAndLoadFromBitmap(ImgOrigin.Picture.Bitmap);
-    FMain.ImgRed.Picture.Assign(CI.GetChanel(ccRed).SaveToBitMap);
-    FMain.ImgGreen.Picture.Assign(CI.GetChanel(ccGreen).SaveToBitMap);
-    FMain.ImgBlue.Picture.Assign(CI.GetChanel(ccBlue).SaveToBitMap);
-    CI.Free;
+
+    GS := CI.GetChanel(ccRed);
+    BM := GS.SaveToBitMap;
+    FMain.ImgRed.Picture.Assign(BM);
+    BM.Free;
+    GS.FreeImage;
+
+    GS := CI.GetChanel(ccGreen);
+    BM := GS.SaveToBitMap;
+    FMain.ImgGreen.Picture.Assign(BM);
+    BM.Free;
+    GS.FreeImage;
+
+    GS := CI.GetChanel(ccBlue);
+    BM := GS.SaveToBitMap;
+    FMain.ImgBlue.Picture.Assign(BM);
+    BM.Free;
+    GS.FreeImage;
+
+    CI.FreeImage;
   end;
   procedure RGBToColor;
   var
@@ -282,8 +300,8 @@ procedure TFMain.BRGBClick(Sender: TObject);
     GS.LoadFromBitMap(ImgBlue.Picture.Bitmap);
     CI.SetChannel(ccBlue, GS);
     FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
-    GS.Free;
-    CI.Free;
+    GS.FreeImage;
+    CI.FreeImage;
   end;
 
 begin
@@ -331,8 +349,8 @@ procedure TFMain.BCMYKClick(Sender: TObject);
     GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgKey.Picture.Bitmap);
     CI.SetChannel(ccKeyColor, GS);
     FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
-    GS.Free;
-    CI.Free;
+    GS.FreeImage;
+    CI.FreeImage;
   end;
 
 begin
@@ -364,7 +382,7 @@ procedure TFMain.BHSIClick(Sender: TObject);
     FMain.ImgHue.Picture.Assign(CI.GetChanel(ccHue).SaveToBitMap);
     FMain.ImgSaturation.Picture.Assign(CI.GetChanel(ccSaturation).SaveToBitMap);
     FMain.ImgIntensity.Picture.Assign(CI.GetChanel(ccIntensity).SaveToBitMap);
-    CI.Free;
+    CI.FreeImage;
   end;
   procedure HSIToColor;
   var
@@ -380,8 +398,8 @@ procedure TFMain.BHSIClick(Sender: TObject);
     GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgIntensity.Picture.Bitmap);
     CI.SetChannel(ccIntensity, GS);
     FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
-    GS.Free;
-    CI.Free;
+    GS.FreeImage;
+    CI.FreeImage;
   end;
 
 begin
@@ -426,8 +444,8 @@ procedure TFMain.BYIQClick(Sender: TObject);
     GS := TCGrayscaleImage.CreateAndLoadFromBitmap(ImgQ.Picture.Bitmap);
     CI.SetChannel(ccQ, GS);
     FMain.ImgRestored.Picture.Assign(CI.SaveToBitMap);
-    GS.Free;
-    CI.Free;
+    GS.FreeImage;
+    CI.FreeImage;
   end;
 
 begin
