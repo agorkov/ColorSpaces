@@ -1,4 +1,4 @@
-object FMain: TFMain
+object FColorSpaces: TFColorSpaces
   Left = 0
   Top = 0
   Caption = #1055#1088#1077#1086#1073#1088#1072#1079#1086#1074#1072#1085#1080#1077' '#1094#1074#1077#1090#1086#1074#1099#1093' '#1087#1088#1086#1089#1090#1088#1072#1085#1089#1090#1074
@@ -112,6 +112,10 @@ object FMain: TFMain
     object TSCMYK: TTabSheet
       Caption = 'CMYK'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgKey: TImage
         Left = 777
         Top = 3
@@ -152,6 +156,10 @@ object FMain: TFMain
     object TSHSI: TTabSheet
       Caption = 'HSI'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgHue: TImage
         Left = 68
         Top = 3
@@ -183,6 +191,10 @@ object FMain: TFMain
     object TSYIQ: TTabSheet
       Caption = 'YIQ'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgI: TImage
         Left = 391
         Top = 3
@@ -339,6 +351,16 @@ object FMain: TFMain
       'B')
     TabOrder = 7
     OnClick = RGVerticalClick
+  end
+  object CBCompareImages: TCheckBox
+    Left = 276
+    Top = 206
+    Width = 90
+    Height = 27
+    Caption = #1057#1088#1072#1074#1085#1080#1074#1072#1090#1100' '#1080#1079#1086#1073#1088#1072#1078#1077#1085#1080#1103
+    TabOrder = 8
+    WordWrap = True
+    OnClick = CBCompareImagesClick
   end
   object OPD: TOpenPictureDialog
     Filter = 

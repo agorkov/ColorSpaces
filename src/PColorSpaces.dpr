@@ -1,19 +1,15 @@
 program PColorSpaces;
-
+
 uses
-  Vcl.Forms,
-  UFMain in 'UFMain.pas' {FMain},
-  UPixelConvert in '..\..\ImgSharedUnits\src\UPixelConvert.pas',
-  UFileConvert in '..\..\ImgSharedUnits\src\UFileConvert.pas',
-  UColorImages in '..\..\ImgSharedUnits\src\UColorImages.pas',
-  UGrayscaleImages in '..\..\ImgSharedUnits\src\UGrayscaleImages.pas';
+  Vcl.Forms, UFColorSpaces in 'UFColorSpaces.pas' {FColorSpaces} , UPixelConvert in 'D:\ImgSharedUnits\src\UPixelConvert.pas', UFileConvert in 'D:\ImgSharedUnits\src\UFileConvert.pas', UColorImages in 'D:\ImgSharedUnits\src\UColorImages.pas', UGrayscaleImages in 'D:\ImgSharedUnits\src\UGrayscaleImages.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TFMain, FMain);
+  Application.CreateForm(TFColorSpaces, FColorSpaces);
   Application.Run;
 
 end.
+
