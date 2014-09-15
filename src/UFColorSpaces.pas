@@ -591,15 +591,40 @@ begin
     if PCColorSpaces.Pages[PCColorSpaces.TabIndex].Tag = 1 then
     begin
       case PCColorSpaces.TabIndex of
-      0: RGBToColor;
-      1: CMYKToColor;
-      2: HSIToColor;
-      3: YIQToColor;
+      0:
+        begin
+          RGBToColor;
+          if not DirectoryExists('RGB') then
+            MkDir('RGB');
+          ChDir('RGB');
+        end;
+      1:
+        begin
+          CMYKToColor;
+          if not DirectoryExists('CMYK') then
+            MkDir('CMYK');
+          ChDir('CMYK');
+        end;
+      2:
+        begin
+          HSIToColor;
+          if not DirectoryExists('HSI') then
+            MkDir('HSI');
+          ChDir('HSI');
+        end;
+      3:
+        begin
+          YIQToColor;
+          if not DirectoryExists('YIQ') then
+            MkDir('YIQ');
+          ChDir('YIQ');
+        end;
       end;
       CompareImages;
       ImgRestored.Picture.SaveToFile('2_restored.bmp');
       ImgDiff.Picture.SaveToFile('3_difference.bmp');
       ImgRestored.Tag := 1;
+      ChDir('..');
     end;
   end;
 end;

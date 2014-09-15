@@ -108,10 +108,10 @@
 				<Form>FColorSpaces</Form>
 				<FormType>dfm</FormType>
 			</DCCReference>
-			<DCCReference Include="D:\ImgSharedUnits\src\UPixelConvert.pas"/>
-			<DCCReference Include="D:\ImgSharedUnits\src\UFileConvert.pas"/>
-			<DCCReference Include="D:\ImgSharedUnits\src\UColorImages.pas"/>
-			<DCCReference Include="D:\ImgSharedUnits\src\UGrayscaleImages.pas"/>
+			<DCCReference Include="..\..\ImgSharedUnits\src\UColorImages.pas"/>
+			<DCCReference Include="..\..\ImgSharedUnits\src\UFileConvert.pas"/>
+			<DCCReference Include="..\..\ImgSharedUnits\src\UGrayscaleImages.pas"/>
+			<DCCReference Include="..\..\ImgSharedUnits\src\UPixelConvert.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

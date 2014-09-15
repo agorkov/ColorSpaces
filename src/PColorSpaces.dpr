@@ -1,7 +1,12 @@
 program PColorSpaces;
 
 uses
-  Vcl.Forms, UFColorSpaces in 'UFColorSpaces.pas' {FColorSpaces} , UPixelConvert in 'D:\ImgSharedUnits\src\UPixelConvert.pas', UFileConvert in 'D:\ImgSharedUnits\src\UFileConvert.pas', UColorImages in 'D:\ImgSharedUnits\src\UColorImages.pas', UGrayscaleImages in 'D:\ImgSharedUnits\src\UGrayscaleImages.pas';
+  Vcl.Forms,
+  UFColorSpaces in 'UFColorSpaces.pas' {FColorSpaces},
+  UColorImages in '..\..\ImgSharedUnits\src\UColorImages.pas',
+  UFileConvert in '..\..\ImgSharedUnits\src\UFileConvert.pas',
+  UGrayscaleImages in '..\..\ImgSharedUnits\src\UGrayscaleImages.pas',
+  UPixelConvert in '..\..\ImgSharedUnits\src\UPixelConvert.pas';
 
 {$R *.res}
 
