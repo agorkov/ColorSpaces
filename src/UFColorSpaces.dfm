@@ -112,6 +112,10 @@ object FColorSpaces: TFColorSpaces
     object TSCMYK: TTabSheet
       Caption = 'CMYK'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgKey: TImage
         Left = 777
         Top = 3
@@ -152,6 +156,10 @@ object FColorSpaces: TFColorSpaces
     object TSHSI: TTabSheet
       Caption = 'HSI'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgHue: TImage
         Left = 68
         Top = 3
@@ -183,6 +191,10 @@ object FColorSpaces: TFColorSpaces
     object TSYIQ: TTabSheet
       Caption = 'YIQ'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ImgI: TImage
         Left = 391
         Top = 3

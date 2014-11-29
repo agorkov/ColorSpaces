@@ -3,8 +3,9 @@ program PColorSpaces;
 uses
   Vcl.Forms,
   UFColorSpaces in 'UFColorSpaces.pas' {FColorSpaces},
+  UBinaryImages in '..\..\ImgSharedUnits\src\UBinaryImages.pas',
+  UBitMapFunctions in '..\..\ImgSharedUnits\src\UBitMapFunctions.pas',
   UColorImages in '..\..\ImgSharedUnits\src\UColorImages.pas',
-  UFileConvert in '..\..\ImgSharedUnits\src\UFileConvert.pas',
   UGrayscaleImages in '..\..\ImgSharedUnits\src\UGrayscaleImages.pas',
   UPixelConvert in '..\..\ImgSharedUnits\src\UPixelConvert.pas';
 

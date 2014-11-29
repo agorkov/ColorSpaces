@@ -70,7 +70,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Math, UPixelConvert, UFileConvert, UColorImages, UGrayscaleImages;
+  Math, UPixelConvert, UBitMapFunctions, UColorImages, UGrayscaleImages;
 
 procedure CompareImages;
 var
@@ -181,7 +181,7 @@ procedure TFColorSpaces.ImgOriginClick(Sender: TObject);
 begin
   if OPD.Execute then
   begin
-    ImgOrigin.Picture.Assign(UFileConvert.LoadFile(OPD.FileName));
+    ImgOrigin.Picture.Assign(UBitMapFunctions.LoadFromFile(OPD.FileName));
     ImgRestored.Tag := 0;
     PCColorSpaces.Pages[0].Tag := 0;
     PCColorSpaces.Pages[1].Tag := 0;
