@@ -200,11 +200,11 @@ begin
   begin
     CIO := TCColorImage.CreateAndLoadFromBitmap(ImgOrigin.Picture.Bitmap);
     CIR := TCColorImage.CreateAndLoadFromBitmap(ImgRestored.Picture.Bitmap);
-    py := round(X * CIO.GetWidth / ImgOrigin.Width);
-    px := round(Y * CIO.GetHeight / ImgOrigin.Height);
-    if px >= CIO.GetWidth then
+    py := round(X * CIO.Width / ImgOrigin.Width);
+    px := round(Y * CIO.Height / ImgOrigin.Height);
+    if px >= CIO.Width then
       px := px - 1;
-    if py >= CIO.GetHeight then
+    if py >= CIO.Height then
       py := py - 1;
     LPosition.Caption := 'row= ' + inttostr(px + 1) + ' col= ' + inttostr(py + 1);
     LROrigin.Caption := 'r=' + inttostr(round(CIO.Pixels[px, py].GetRed * 255));
