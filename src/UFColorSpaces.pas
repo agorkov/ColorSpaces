@@ -91,9 +91,9 @@ begin
   for j := 0 to BMO.Height do
     for i := 0 to BMO.Width do
     begin
-      o.SetFullColor(BMO.Canvas.Pixels[i, j]);
-      r.SetFullColor(BMR.Canvas.Pixels[i, j]);
-      dist := abs(round(255 * (o.GetRed - r.GetRed))) + abs(round(255 * (o.GetGreen - r.GetGreen))) + abs(round(255 * (o.GetBlue - r.GetBlue)));
+      o.FullColor:=BMO.Canvas.Pixels[i, j];
+      r.FullColor:=BMR.Canvas.Pixels[i, j];
+      dist := abs(round(255 * (o.Red - r.Red))) + abs(round(255 * (o.Green - r.Green))) + abs(round(255 * (o.Blue - r.Blue)));
       if dist = 0 then
         BMD.Canvas.Pixels[i, j] := clWhite
       else
@@ -207,18 +207,18 @@ begin
     if py >= CIO.Height then
       py := py - 1;
     LPosition.Caption := 'row= ' + inttostr(px + 1) + ' col= ' + inttostr(py + 1);
-    LROrigin.Caption := 'r=' + inttostr(round(CIO.Pixels[px, py].GetRed * 255));
-    LGOrigin.Caption := 'g=' + inttostr(round(CIO.Pixels[px, py].GetGreen * 255));
-    LBOrigin.Caption := 'b=' + inttostr(round(CIO.Pixels[px, py].GetBlue * 255));
-    ImgOriginTest.Canvas.Pen.Color := CIO.Pixels[px, py].GetFullColor;
-    ImgOriginTest.Canvas.Brush.Color := CIO.Pixels[px, py].GetFullColor;
+    LROrigin.Caption := 'r=' + inttostr(round(CIO.Pixels[px, py].Red * 255));
+    LGOrigin.Caption := 'g=' + inttostr(round(CIO.Pixels[px, py].Green * 255));
+    LBOrigin.Caption := 'b=' + inttostr(round(CIO.Pixels[px, py].Blue * 255));
+    ImgOriginTest.Canvas.Pen.Color := CIO.Pixels[px, py].FullColor;
+    ImgOriginTest.Canvas.Brush.Color := CIO.Pixels[px, py].FullColor;
     ImgOriginTest.Canvas.Brush.Style := bsSolid;
     ImgOriginTest.Canvas.Rectangle(0, 0, ImgOriginTest.Width, ImgOriginTest.Height);
-    LRRestored.Caption := 'r=' + inttostr(round(CIR.Pixels[px, py].GetRed * 255));
-    LGRestored.Caption := 'g=' + inttostr(round(CIR.Pixels[px, py].GetGreen * 255));
-    LBRestored.Caption := 'b=' + inttostr(round(CIR.Pixels[px, py].GetBlue * 255));
-    ImgRestoredTest.Canvas.Pen.Color := CIR.Pixels[px, py].GetFullColor;
-    ImgRestoredTest.Canvas.Brush.Color := CIR.Pixels[px, py].GetFullColor;
+    LRRestored.Caption := 'r=' + inttostr(round(CIR.Pixels[px, py].Red * 255));
+    LGRestored.Caption := 'g=' + inttostr(round(CIR.Pixels[px, py].Green * 255));
+    LBRestored.Caption := 'b=' + inttostr(round(CIR.Pixels[px, py].Blue * 255));
+    ImgRestoredTest.Canvas.Pen.Color := CIR.Pixels[px, py].FullColor;
+    ImgRestoredTest.Canvas.Brush.Color := CIR.Pixels[px, py].FullColor;
     ImgRestoredTest.Canvas.Brush.Style := bsSolid;
     ImgRestoredTest.Canvas.Rectangle(0, 0, ImgRestoredTest.Width, ImgRestoredTest.Height);
     CIO.FreeColorImage;
